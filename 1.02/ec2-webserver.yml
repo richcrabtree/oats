@@ -1,0 +1,93 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: EC2 Bastion
+Parameters:
+  EnvironmentName:
+    Description: An environment name that is prefixed to resource names
+    Type: String
+  SshKey:
+    Type: 'AWS::EC2::KeyPair::KeyName'
+    Description: SSH Key pair to auth with
+  ImageId:
+    Type: 'AWS::EC2::Image::Id'
+    Description: The AMI to base this instance off of
+  SecurityGroupId:
+    Type: String
+    Description: The bastion security group
+  VpcId:
+    Type: 'AWS::EC2::VPC::Id'
+    Description: The VPC the resources are launched within
+  Subnet:
+    Type: 'AWS::EC2::Subnet::Id'
+    Description: Subnet for instance to live within
+  InstanceType:
+    Type: String
+    Description: Instance size
+    Default: t2.small
+    AllowedValues:
+      - c3.2xlarge
+      - c3.4xlarge
+      - c3.8xlarge
+      - c3.large
+      - c3.xlarge
+      - c4.2xlarge
+      - c4.4xlarge
+      - c4.8xlarge
+      - c4.large
+      - c4.xlarge
+      - c4.2xlarge
+      - d2.2xlarge
+      - d2.4xlarge
+      - d2.8xlarge
+      - d2.xlarge
+      - g2.2xlarge
+      - g2.2xlarge
+      - g2.8xlarge
+      - g2.8xlarge
+      - i2.2xlarge
+      - i2.4xlarge
+      - i2.8xlarge
+      - i2.xlarge
+      - m1.xlarge
+      - m3.2xlarge
+      - m3.large
+      - m3.medium
+      - m3.xlarge
+      - m4.10xlarge
+      - m4.2xlarge
+      - m4.4xlarge
+      - m4.large
+      - m4.xlarge
+      - r3.2xlarge
+      - r3.4xlarge
+      - r3.8xlarge
+      - r3.large
+      - r3.xlarge
+      - t2.large
+      - t2.large
+      - t2.medium
+      - t2.micro
+      - t2.small
+      - t3.large
+      - t3.large
+      - t3.medium
+      - t3.micro
+      - t3.small
+Resources:
+  WebServerInstance:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: !Ref InstanceType
+      ImageId: !Ref ImageId
+      KeyName: !Ref SshKey
+      SubnetId: !Ref Subnet
+      SecurityGroupIds:
+        - !Ref SecurityGroupId
+      Tags:
+        - Key: Name
+          Value: !Sub '${EnvironmentName}-webserver'
+        - Key: environment
+          Value: !Ref EnvironmentName
+Outputs: 
+  WebServerInstanceID:
+    Description: A reference to the created instance
+    Value: !Ref WebServerInstance
